@@ -13,6 +13,8 @@ public class PacketSavingThread extends Thread {
     private final GalileoskySimulator simulator;
     private final CPFConverter cpfConverter;
     private final String cpf;
+    private  String placa;
+    private CarPlateEncoder carPlateEncoder;
     private boolean running = true;
 
     /**
@@ -23,12 +25,14 @@ public class PacketSavingThread extends Thread {
      * @param imei            IMEI do dispositivo.
      * @param cpf             CPF a ser convertido e adicionado aos pacotes.
      */
-    public PacketSavingThread(GalileoskySimulator simulator, LocationService locationService, String imei, String cpf) {
+    public PacketSavingThread(GalileoskySimulator simulator, LocationService locationService, String imei, String cpf, String placa) {
         this.imei = imei;
         this.locationService = locationService;
         this.simulator = simulator;
         this.cpfConverter = new CPFConverter();
+        carPlateEncoder = new CarPlateEncoder();
         this.cpf = cpf;
+        this.placa = placa;
     }
 
     /**
@@ -86,7 +90,7 @@ public class PacketSavingThread extends Thread {
         byte[] imeiBytes = imei.getBytes();
         int timestamp = getCurrentTimestamp();
 
-        ByteBuffer buffer = ByteBuffer.allocate(2048);
+        ByteBuffer buffer = ByteBuffer.allocate(1000);
         buffer.order(ByteOrder.LITTLE_ENDIAN);
 
         buffer.put((byte) 0x01); // Header
@@ -119,6 +123,10 @@ public class PacketSavingThread extends Thread {
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
+
+        // Tag de altitude
+        buffer.put((byte) 0xC2); // Tag 0x34 para altitude
+        buffer.putInt(carPlateEncoder.encode(placa));
 
         // Calculando o comprimento do pacote
         int length = buffer.position() - 3; // Exclui o header e o próprio comprimento
@@ -218,3 +226,6 @@ public class PacketSavingThread extends Thread {
         return (short) crc;
     }
 }
+
+
+

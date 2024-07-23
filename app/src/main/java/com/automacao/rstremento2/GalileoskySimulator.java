@@ -42,7 +42,7 @@ public class GalileoskySimulator {
      * @param cpf  CPF associado ao dispositivo.
      * @return true se a conexão foi estabelecida com sucesso, caso contrário, false.
      */
-    public boolean sendCoordinates(String imei, String cpf) {
+    public boolean sendCoordinates(String imei, String cpf, String placa) {
         byte[] firstPacket = buildFirstPacket(imei);
         Log.d(TAG, "Tentando enviar o primeiro pacote para o servidor...");
 
@@ -60,7 +60,7 @@ public class GalileoskySimulator {
 
         isConnected = true;
         Log.d(TAG, "Conexão estabelecida com o servidor.");
-        startPacketSavingThread(imei, cpf);
+        startPacketSavingThread(imei, cpf, placa);
         startPacketSendingThread();
         return true;
     }
@@ -154,8 +154,8 @@ public class GalileoskySimulator {
      * @param imei IMEI do dispositivo.
      * @param cpf  CPF associado ao dispositivo.
      */
-    private void startPacketSavingThread(String imei, String cpf) {
-        savingThread = new PacketSavingThread(this, locationService, imei, cpf);
+    private void startPacketSavingThread(String imei, String cpf,String placa) {
+        savingThread = new PacketSavingThread(this, locationService, imei, cpf,placa);
         savingThread.start();
     }
 

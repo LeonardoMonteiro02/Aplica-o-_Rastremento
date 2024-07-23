@@ -159,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void startGalileoskySimulator() {
         new Thread(() -> {
-            if (galileoskySimulator.sendCoordinates("357138166785014", "12726292607")) {
+            if (galileoskySimulator.sendCoordinates("357138166785014", "12565696908", "ACC1D23")) {
                 Log.d("MainActivity", "Conexão inicial estabelecida.");
             } else {
                 Log.d("MainActivity", "Falha ao estabelecer a conexão inicial.");
@@ -185,3 +185,14 @@ public class MainActivity extends AppCompatActivity {
         stopLocationService();
     }
 }
+
+
+
+
+
+
+
+
+
+
+
