@@ -172,9 +172,17 @@ public class PacketSavingThread extends Thread {
         ByteBuffer buffer = ByteBuffer.allocate(9);
         buffer.order(ByteOrder.LITTLE_ENDIAN);
 
-        buffer.put((byte) satellites); // Número de satélites
-        buffer.putInt(latitudeInt);
-        buffer.putInt(longitudeInt);
+        // Formatando a tag 0x + hexString
+        if (satellites > 15){
+            buffer.put((byte) 15); // Tag 0x0C para dados de coordenadas
+            buffer.putInt(latitudeInt);
+            buffer.putInt(longitudeInt);
+        }
+        else {
+            buffer.put((byte) satellites); // Tag 0x0C para dados de coordenadas
+            buffer.putInt(latitudeInt);
+            buffer.putInt(longitudeInt);
+        }
 
         return buffer.array();
     }

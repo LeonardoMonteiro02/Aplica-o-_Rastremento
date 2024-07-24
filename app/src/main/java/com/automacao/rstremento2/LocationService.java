@@ -28,7 +28,6 @@ public class LocationService extends Thread {
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1001;
     private boolean isRunning = false;
     private LocationUpdateListener listener;
-    private GpsSpeedFilter gpsSpeedFilter;
 
     // Atributos de localização
     private double latitude;
@@ -52,7 +51,6 @@ public class LocationService extends Thread {
     public LocationService(Context context) {
         this.context = context;
         this.fusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
-        this.gpsSpeedFilter = new GpsSpeedFilter();
     }
 
     /**
@@ -103,7 +101,7 @@ public class LocationService extends Thread {
                         latitude = location.getLatitude();
                         longitude = location.getLongitude();
                         altitude = location.getAltitude();
-                        speed = gpsSpeedFilter.getFilteredSpeed(location); // Filtra a velocidade
+                        speed = location.getSpeed() * 4;
                         if (listener != null) {
                             listener.onLocationUpdate(latitude, longitude, altitude, speed, satellitesConnected);
                         }
@@ -147,7 +145,7 @@ public class LocationService extends Thread {
                         latitude = location.getLatitude();
                         longitude = location.getLongitude();
                         altitude = location.getAltitude();
-                        speed = gpsSpeedFilter.getFilteredSpeed(location); // Filtra a velocidade
+                        speed = location.getSpeed() * 4;
                         if (listener != null) {
                             listener.onLocationUpdate(latitude, longitude, altitude, speed, satellitesConnected);
                         }
